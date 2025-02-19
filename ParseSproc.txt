@@ -1,0 +1,51 @@
+-- ======================================================
+-- Create Scalar Function Template for Azure SQL Database
+-- ======================================================
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:      pws
+-- Create Date: 16-OCT-2023
+-- Description: Parse quantity from input string.
+-- =============================================
+ALTER PROCEDURE GetQty @InputString NVARCHAR(100)
+AS
+BEGIN
+	DECLARE @QtyVal AS VARCHAR(20);
+	DECLARE @PosQtyIdx AS INT;
+	DECLARE @PosVendorIdx AS INT;
+	DECLARE @retVal AS DECIMAL;
+
+	SET @retVal = 0.0;
+
+	BEGIN TRY
+		-- Get index position
+		SET @PosQtyIdx = CHARINDEX('QTY:', @InputString)
+		SET @PosVendorIdx = CHARINDEX('VENDOR', @InputString)
+
+		PRINT 'Input: ' + @InputString
+		PRINT 'PosQtyIdx: ' + cast(@PosQtyIdx AS VARCHAR(50))
+		PRINT 'PosVendorIdx: ' + cast(@PosVendorIdx AS VARCHAR(50))
+
+		IF @PosVendorIdx = 0
+			OR @PosQtyIdx = 0
+			PRINT 'Indexes are 0'
+		ELSE
+			SET @QtyVal = trim(SUBSTRING(@InputString, @PosQtyIdx + 4, @PosVendorIdx - (@PosQtyIdx + 4)));
+
+		PRINT 'QtyVal: ' + @QtyVal;
+	END TRY
+
+	BEGIN CATCH
+		SET @QtyVal = '0.0'
+	END CATCH;
+
+	RETURN cast(@QtyVal AS DECIMAL)
+END
+GO
+
+

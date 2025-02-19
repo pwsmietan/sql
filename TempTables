@@ -1,0 +1,33 @@
+
+-- Temp memory table
+IF OBJECT_ID('tempdb..#Results') IS NOT NULL DROP TABLE [#Results]
+GO
+CREATE TABLE #Results ( Company CHAR(3), StepId TINYINT, FieldId TINYINT )
+GO
+select company, stepid, fieldid from #Results
+GO
+ALTER TABLE #Results ADD foo VARCHAR(50) NULL
+GO
+insert into #Results (Company, StepId, FieldId) VALUES ('IBM', 1, 2)
+GO
+select company, stepid, fieldid, foo from #Results
+GO
+IF OBJECT_ID('tempdb..#Results') IS NOT NULL DROP TABLE #Results
+GO
+
+
+
+-- Regular table on disk
+IF OBJECT_ID('Results') IS NOT NULL DROP TABLE [Results]
+GO
+CREATE TABLE Results ( Company CHAR(3), StepId TINYINT, FieldId TINYINT )
+GO
+select company, stepid, fieldid from Results
+GO
+ALTER TABLE Results ADD foo VARCHAR(50) NULL
+GO
+select company, stepid, fieldid, foo from Results
+GO
+IF OBJECT_ID('Results') IS NOT NULL DROP TABLE Results
+GO
+
